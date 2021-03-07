@@ -17,15 +17,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    -
+      name: Login to DockerHub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v1
+      with:
+        username: arekkas
+        password: "${{ secrets.DOCKER_SECRET_AREKKAS }}"
     - name: Build and push Docker images
       # You may pin to the exact commit or the version.
       # uses: docker/build-push-action@ab83648e2e224cfeeab899e23b639660765c3a89
       uses: docker/build-push-action@v2
       with:
         push: true
-        # Username used to log in to a Docker registry. If not set then no login will occur
-        username: arekkas
-        # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
-        password: "${{ secrets.DOCKER_SECRET_AREKKAS }}"
         # Docker repository to tag the image with
-        tags: oryd/e2e-env:latest
+        tags: docker.io/oryd/e2e-env:latest
